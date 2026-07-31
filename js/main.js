@@ -138,6 +138,56 @@
     setTimeout(() => { if (err) err.textContent = ''; }, 4000);
   }
 
+  /* ── 8b. Galería — Lightbox ─────────────────────────────── */
+  const galeriaItems = Array.from(document.querySelectorAll('.galeria-item'));
+  const lightbox      = document.getElementById('lightbox');
+
+  if (galeriaItems.length && lightbox) {
+    const lbImg    = lightbox.querySelector('.lightbox-img');
+    const btnClose = lightbox.querySelector('.lightbox-close');
+    const btnPrev  = lightbox.querySelector('.lightbox-prev');
+    const btnNext  = lightbox.querySelector('.lightbox-next');
+    let current = 0;
+
+    function updateLightbox() {
+      const item = galeriaItems[current];
+      lbImg.src = item.dataset.full;
+      lbImg.alt = item.querySelector('img').alt;
+    }
+    function openLightbox(i) {
+      current = i;
+      updateLightbox();
+      lightbox.classList.add('open');
+      lightbox.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeLightbox() {
+      lightbox.classList.remove('open');
+      lightbox.setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = '';
+    }
+    function step(dir) {
+      current = (current + dir + galeriaItems.length) % galeriaItems.length;
+      updateLightbox();
+    }
+
+    galeriaItems.forEach((item, i) => {
+      item.addEventListener('click', () => openLightbox(i));
+    });
+    btnClose.addEventListener('click', closeLightbox);
+    btnPrev.addEventListener('click', () => step(-1));
+    btnNext.addEventListener('click', () => step(1));
+    lightbox.addEventListener('click', (e) => {
+      if (e.target === lightbox) closeLightbox();
+    });
+    document.addEventListener('keydown', (e) => {
+      if (!lightbox.classList.contains('open')) return;
+      if (e.key === 'Escape')     closeLightbox();
+      if (e.key === 'ArrowLeft')  step(-1);
+      if (e.key === 'ArrowRight') step(1);
+    });
+  }
+
   /* ── 8. Footer year ─────────────────────────────────────── */
   const yr = document.getElementById('year');
   if (yr) yr.textContent = new Date().getFullYear();
