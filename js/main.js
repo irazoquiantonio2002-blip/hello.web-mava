@@ -117,8 +117,7 @@
         return;
       }
 
-      // TODO: reemplazar con el número real de WhatsApp del negocio (formato 52 + 10 dígitos)
-      const phone = '520000000000';
+      const phone = '525524758429';
       const text  = encodeURIComponent(
         `Hola Montacargas MAVA 🛠️\n\nSoy *${name}*.\nMe interesa: *${interest}*.\n\n${message}`
       );
